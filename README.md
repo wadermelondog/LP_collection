@@ -16,3 +16,5 @@ Catalog#,Artist,Title,Label,Format,Rating,Released,release_id,CollectionFolder,D
 Levyn tietojen muokkaaminen
 
 Levyn tietojen poistaminen
+
+Lauri Turunen 23/09/2024
