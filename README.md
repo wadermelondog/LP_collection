@@ -18,3 +18,18 @@ Levyn tietojen muokkaaminen
 Levyn tietojen poistaminen
 
 Lauri Turunen 23/09/2024
+
+
+26/10/2024 
+
+Ideointia projektia varten,
+Funktioihin muutoksia.
+Menu: Näyttää statseja kokoelmasta tällä hetkellä, mm levyjen määrä
+1. Lisää uusi levy
+2. Hae levyjä
+    Alaohjelmat hakutoimintoon, Muokkaa levyn tietoja ja poista levy
+3. Luettele kaikki levyt, tähän mahdollisuus listata vaan tietyt tiedot levyistä
+4. Lataa kokoelma, mahdollisuus luoda uusi kokoelma
+5. Wish list, alkeellinen tapa pitää kirjaa levyista jota haluaisin
+
+Päätin toteuttaa projektin niin että ohjelma lataa .csv tiedoston aina alussa dictionaryksi jolloin sen käsittely on helpompaa ja sitten aina suljettaessa tallentaa sen takaisin .csv:ksi, pythonissa on DictReader metodi jolla voidaan lukea tiedosto listaksi dictionaryja ja se syöttää niihin dictionaryihin ylimmästä rivistä avaimiksi ne catalog, nimi yms
