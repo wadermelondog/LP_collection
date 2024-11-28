@@ -1,5 +1,5 @@
-# Loppuprojektitest
-Tämä on projekti python kurssille. Se on vasta aloitusvaiheessa
+# Lp kokoelma
+Tämä on projekti python kurssille.
 
 Perusidea
 Python ohjelma joka ylläpitää vinyylikokoelmaani.
@@ -36,3 +36,6 @@ Päätin toteuttaa projektin niin että ohjelma lataa .csv tiedoston aina alussa
 
 ## 28/11/2024
 Nonniin nyt on aika urakoida tämä loppuun
+15:40 Locked in
+17:40 hyvällä mallilla
+21:34 valmis, viel tarkentavia kommentteja ja parsimista sekä outputtien formatoimista, sekä stats kohdassa average year on viel rikki

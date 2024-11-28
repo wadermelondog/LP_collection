@@ -1,28 +1,40 @@
 import csv
-
-
-def load_collection(filename, create_empty=False):
+def load_collection():
     """Function to load the collection from a .csv file
 
-    Args:
-        filename (string): filename from which to load the collection
-
     Returns:
-        list: Collection as a list of dictionaries, or an empty list
+        list: collection as list of dictionaries
+        string: filename   
     """
     collection = []
+    filename = input("Enter the filename to load the collection from, leave empty for new collection.csv: ")
+    if not filename:
+        filename = "collection.csv"
     try:
-        with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
-            reader = csv.DictReader(file)
-            collection = [row for row in reader]
-        print(f"Collection loaded from {filename}")
-    except FileNotFoundError:
-        if create_empty:
-            print("Filename not found, starting with an empty collection")
-            return collection
+        if not filename.endswith('.csv'):
+            print("Filename must end with .csv")
         else:
-            print(f"Incorrect filename, please try again")
-    return collection
+            with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
+                reader = csv.DictReader(file)
+                collection = [row for row in reader]
+        print(f"Collection loaded from {filename}")
+        return collection, filename
+    except FileNotFoundError:
+        print(f"File {filename} not found, starting with an empty collection")
+        collection = [{"Catalog#": "",
+            "Artist": "",
+            "Title": "",
+            "Label": "",
+            "Format": "",
+            "Rating": "",
+            "Released": "",
+            "release_id": "",
+            "CollectionFolder": "",
+            "Date Added": "",
+            "Collection Media Condition": "",
+            "Collection Sleeve Condition": "",
+            "Collection Notes": ""}]
+    return collection, filename
 
 def add_record(collection) -> list:
     from datetime import datetime
@@ -30,7 +42,7 @@ def add_record(collection) -> list:
 
     Args:
         collection (list): collection as a list of dictionaries
-    Catalog#,Artist,Title,Label,Format,Rating,Released,release_id,CollectionFolder,Date Added,Collection Media Condition,Collection Sleeve Condition,Collection Notes
+
     Returns:
         list: Updated collection
     """
@@ -47,19 +59,161 @@ def add_record(collection) -> list:
         print(f"Record {record['Title']} by {record['Artist']} added to the collection")
         return collection
     
-def search_collection(collection):
+def search_collection(collection) -> list:
     """Function to search the collection
 
     Args:
-        collection (list): collection as a list of dictionaries
+        collection (list): collection as list of dictionaries
 
     Returns:
-        list: Collection as a list of dictionaries
+        list: collection, modified or not
     """
-    search_key = input(f"Enter the search key {collection.keys[0]}, leave empty to search everything: ")
+    print(", ".join(collection[0].keys()))
+    search_key = input(f"Enter the search key, leave empty to search everything: ")
     search_term = input("Enter the search term: ")
     search_results = []
     for record in collection:
         if search_key == "":
-            for 
+            for key, value in record.items():
+                if search_term.lower() in value.lower():
+                    search_results.append(record)
+                    break
+        else:
+            for key, value in record.items():
+                if key == search_key and search_term.lower() in value.lower():
+                    search_results.append(record)
+                    break
+    if not search_results:
+        print("No results found")
+    else:
+        print(f"\nSearch results:")
+        for i, record in enumerate(search_results):
+            print(f"{i+1}")
+            for key, value in record.items():
+                if value == "":
+                    continue
+                else:
+                    print(f"{key}: {value}")
+        choice = input(f"Enter the number of the record to modify or delete, or leave empty to return to the main menu: ")
+        if choice:
+            modify_record(collection, search_results[int(choice)-1])
+    return collection
 
+def modify_record(collection, record) -> list:
+    """Function to modify a record in the collection
+
+    Args:
+        collection (list): collection as list of dictionaries
+        record (dict): record to modify
+        key (string): key to modify
+
+    Returns:
+        list: collection, modified
+    """
+    print(f"{record.values()}")
+    try:
+        key = input(f"Enter the key to modify, or leave empty to return to the main menu: ")
+        if key:
+            value = input(f"Enter the new value for {key}: ")
+            record[key] = value
+            print(f"Record {record['Title']} by {record['Artist']} modified in the collection")
+        elif not key:
+            print("Returning to the main menu")
+    except KeyError:
+        print(f"Incorrect key, please try again")
+        
+    return collection
+
+def delete_record(collection, record) -> list:
+    """Function to delete a record from the collection
+
+    Args:
+        collection (list): collection as list of dictionaries
+        record (dict): record to delete
+
+    Returns:
+        list: collection, modified
+    """
+    collection.remove(record)
+    print(f"Record {record['Title']} by {record['Artist']} deleted from the collection")
+    return collection
+
+def list_collection(collection):
+    """Function to list the collection
+
+    Args:
+        collection (list): collection as list of dictionaries
+    """
+    print("Select the keys you want to be listed, leave empty to list everything")
+    print(", ".join(collection[0].keys()))
+    keys = input("Enter the keys, separated by commas: ")
+    if " " in keys:
+        keys = keys.replace(" ", "")
+    if keys:
+        keys = keys.split(',')
+        for record in collection:
+            for key, value in record.items():
+                if key in keys:
+                    print(f"{key}: {value}")
+            print("--------------------")            
+    else:
+        for record in enumerate(collection):
+            for key, value in record.items():
+                print(f"{key}: {value}")
+
+def save_collection(collection, filename):
+    """Function to save the collection to a .csv file
+
+    Args:
+        collection (list): collection as list of dictionaries
+        filename (string): filename to save the collection to
+    """
+    with open(f'{filename}', mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=collection[0].keys())
+        writer.writeheader()
+        for record in collection:
+            writer.writerow(record)
+    print(f"Collection saved to {filename}")
+    
+def print_stats(collection):
+    artist_occurrences = {}
+    years = []
+    for record in collection:
+        artist = record['Artist']
+        year = record['Released']
+        if year.isdigit():
+            years.append(int(year))
+        if artist in artist_occurrences:
+            artist_occurrences[artist] += 1
+        else:
+            artist_occurrences[artist] = 1
+    if len(collection) == 1:
+        print("You have no records in your collection")
+    else:
+        print(f"You have {len(collection)-1} records in your collection, your favourite artist is {max(artist_occurrences, key=artist_occurrences.get)}, the average year of release is {sum(years)/len(years):.0f}")
+    
+def main():
+    collection, filename = load_collection()
+    while True:
+        print("Welcome to your offline vinyl collection!")
+        print_stats(collection)
+        print("Choose from the following options:")
+        print("1. Add a new record")
+        print("2. Search and modify")
+        print("3. List the collection")
+        print("Leave empty to save and exit")
+        choice = input("Enter your choice: ")
+        if choice == '1':
+            collection = add_record(collection)
+        elif choice == '2':
+            collection = search_collection(collection)
+        elif choice == '3':
+            list_collection(collection)
+        elif not choice:
+            save_collection(collection, filename)
+            break
+        else:
+            print("Invalid choice, please try again")
+        
+        
+main()
