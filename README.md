@@ -33,3 +33,6 @@ Menu: Näyttää statseja kokoelmasta tällä hetkellä, mm levyjen määrä
 5. Wish list, alkeellinen tapa pitää kirjaa levyista jota haluaisin
 
 Päätin toteuttaa projektin niin että ohjelma lataa .csv tiedoston aina alussa dictionaryksi jolloin sen käsittely on helpompaa ja sitten aina suljettaessa tallentaa sen takaisin .csv:ksi, pythonissa on DictReader metodi jolla voidaan lukea tiedosto listaksi dictionaryja ja se syöttää niihin dictionaryihin ylimmästä rivistä avaimiksi ne catalog, nimi yms
+
+## 28/11/2024
+Nonniin nyt on aika urakoida tämä loppuun
