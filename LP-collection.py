@@ -86,6 +86,8 @@ def add_record(collection) -> list:
                             except ValueError:
                                 print("Invalid choice, try again.")
                         break
+                    except ValueError:
+                        print("Invalid choice, try again.")
                 elif "Format" in key:
                     while True:
                         try:
