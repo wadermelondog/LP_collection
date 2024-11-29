@@ -74,13 +74,19 @@ def add_record(collection) -> list:
                         if input_types[key] == int:
                             user_input = input(f"{key}: ")
                             record[key] = int(user_input)
-                        elif "Condition" in key:
-                            print("Choose from the following options:")
-                            print("1. M, 2. NM, 3. VG+, 4. VG, 5. G+, 6. G, 7. F, 8. P")
-                            conditions = {1: "M", 2: "NM", 3: "VG+", 4: "VG", 5: "G+", 6: "G", 7: "F", 8: "P"}
-                            condition = input("Enter the choice: ")
-                            record[key] = conditions[int(condition)]
-                            
+                        elif key == "Collection Media Condition" or key == "Collection Sleeve Condition":
+                            while True:
+                                try: 
+                                    print("Choose {key}")
+                                    print("Choose from the following options:")
+                                    print("1. M, 2. NM, 3. VG+, 4. VG, 5. G+, 6. G, 7. F, 8. P")
+                                    conditions = {1: "M", 2: "NM", 3: "VG+", 4: "VG", 5: "G+", 6: "G", 7: "F", 8: "P"}
+                                    condition = input("Enter the choice: ")
+                                    record[key] = conditions[int(condition)]
+                                    break
+                                except ValueError:
+                                    print("Invalid choice, try again.")
+                            break
                         elif "Format" in key:
                             while True:
                                 try:
@@ -103,13 +109,14 @@ def add_record(collection) -> list:
                                             continue  
                                     else:
                                         print("Format chosen:", formats[int(format)])
-                                        break
+                                    break
                                 except ValueError:
                                     print("Invalid choice, please try again")
+                            break
                         else: 
                             user_input = input(f"{key}: ")
                             record[key] = user_input
-                        break
+                            break
                     except ValueError:
                         print(f"Invalid input for {key}. Expected {input_types[key].__name__}.")
         collection.append(record)
