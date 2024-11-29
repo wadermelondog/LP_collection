@@ -56,7 +56,7 @@ def add_record(collection) -> list:
         "Label": str,
         "Format": str,
         "Rating": int,
-        "Released": str,
+        "Released": int,
         "release_id": str,
         "CollectionFolder": str,
         "Collection Media Condition": str,
@@ -70,9 +70,9 @@ def add_record(collection) -> list:
                 if key == 'Date Added':
                     record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 else:
-                    user_input = input(f"Enter {key}: ")
                     try:
                         if input_types[key] == int:
+                            user_input = input(f"{key}: ")
                             record[key] = int(user_input)
                         elif "Condition" in key:
                             print("Choose from the following options:")
@@ -90,14 +90,24 @@ def add_record(collection) -> list:
                                     format = input("Enter the choice: ")
                                     print("Format chosen:", formats[int(format)])
                                     print("Is it a reissue, compilation or 180g etc?")
-                                    if format in (1, 3):
-                                        record[key] = "formats[int(format)], Album"
-                                    
+                                    choice = input("Yes or No: ")
+                                    if format == "1" or format == "2" or format == "3":
+                                        if choice.lower() == "yes" or choice.lower() == "y":
+                                            record[key] = f"{formats[int(format)]}, Album, {input('Enter the additional information: ')}"
+                                            break
+                                        elif choice.lower() == "no" or choice.lower() == "n":
+                                            record[key] = formats[int(format)]
+                                            break
+                                        else:
+                                            print("Invalid choice, please try again")
+                                            continue  
+                                    else:
+                                        print("Format chosen:", formats[int(format)])
+                                        break
                                 except ValueError:
                                     print("Invalid choice, please try again")
-                                    
-                                
                         else: 
+                            user_input = input(f"{key}: ")
                             record[key] = user_input
                         break
                     except ValueError:

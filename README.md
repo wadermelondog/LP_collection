@@ -45,5 +45,6 @@ Average year toimii jotenkuten, jos ei oo tarpeeks levyjä niin tulee zerodivisi
 lisäilin kamaa, esimerkiksi add record kohdassa condition kohdissa se nyt näyttää suoraan että valitse näistä kunnoista ja sit voi valita minkä kuntonen sleeve on yms.
 Ainoa ongelma on että nyt se jäätyy siinä kohdassa :D, Duunailin sitä vähäsen ja formattiin laitoin saman että tulee promptia ja se vaan kysyy mikä laitetaan.
 Discogsin formaattilista on vaan niin pitkä että todennäköisesti ainakin tässä tekstipohjaisessa ohjelmassa päädyn siihen että omalla user inputilla sitten laitellaan ne ylimääräset.
+
 ![Formaattilista](/Dokumentaatio/image.png)
 
