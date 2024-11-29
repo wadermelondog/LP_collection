@@ -39,3 +39,11 @@ Nonniin nyt on aika urakoida tämä loppuun
 15:40 Locked in
 17:40 hyvällä mallilla
 21:34 valmis, viel tarkentavia kommentteja ja parsimista sekä outputtien formatoimista, sekä stats kohdassa average year on viel rikki
+
+## 29/11/2024
+Average year toimii jotenkuten, jos ei oo tarpeeks levyjä niin tulee zerodivision error, täytyy korjata
+lisäilin kamaa, esimerkiksi add record kohdassa condition kohdissa se nyt näyttää suoraan että valitse näistä kunnoista ja sit voi valita minkä kuntonen sleeve on yms.
+Ainoa ongelma on että nyt se jäätyy siinä kohdassa :D, Duunailin sitä vähäsen ja formattiin laitoin saman että tulee promptia ja se vaan kysyy mikä laitetaan.
+Discogsin formaattilista on vaan niin pitkä että todennäköisesti ainakin tässä tekstipohjaisessa ohjelmassa päädyn siihen että omalla user inputilla sitten laitellaan ne ylimääräset.
+![Formaattilista](/Dokumentaatio/image.png)
+

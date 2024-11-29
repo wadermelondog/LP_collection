@@ -39,7 +39,9 @@ def load_collection():
 def add_record(collection) -> list:
     from datetime import datetime
     """Function to add a record to the collection
-
+        Checks which input type is expected for the field and asks for it.
+        Asks for the condition of the record by displaying the options for it.
+        
     Args:
         collection (list): collection as a list of dictionaries
 
@@ -47,14 +49,59 @@ def add_record(collection) -> list:
         list: Updated collection
     """
     record = {}
+    input_types = {
+        "Catalog#": str,
+        "Artist": str,
+        "Title": str,
+        "Label": str,
+        "Format": str,
+        "Rating": int,
+        "Released": str,
+        "release_id": str,
+        "CollectionFolder": str,
+        "Collection Media Condition": str,
+        "Collection Sleeve Condition": str,
+        "Collection Notes": str}
     while True:
         print("Enter the following fields for the record:")
         print(collection[0].keys())
         for key in collection[0].keys():
-            if key == 'Date Added':
-                record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            else:
-                record[key] = input(f"Enter {key}: ")
+            while True:
+                if key == 'Date Added':
+                    record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                else:
+                    user_input = input(f"Enter {key}: ")
+                    try:
+                        if input_types[key] == int:
+                            record[key] = int(user_input)
+                        elif "Condition" in key:
+                            print("Choose from the following options:")
+                            print("1. M, 2. NM, 3. VG+, 4. VG, 5. G+, 6. G, 7. F, 8. P")
+                            conditions = {1: "M", 2: "NM", 3: "VG+", 4: "VG", 5: "G+", 6: "G", 7: "F", 8: "P"}
+                            condition = input("Enter the choice: ")
+                            record[key] = conditions[int(condition)]
+                            
+                        elif "Format" in key:
+                            while True:
+                                try:
+                                    print("Choose from the following options:")
+                                    print("1. LP, 2. 2xLP, 3. 3xLP, 4. 7\", 5. 10\", 6. 12\"")
+                                    formats = {1: "LP", 2: "2xLP", 3: "3xLP", 4: "7\"", 5: "10\"", 6: "12\""}
+                                    format = input("Enter the choice: ")
+                                    print("Format chosen:", formats[int(format)])
+                                    print("Is it a reissue, compilation or 180g etc?")
+                                    if format in (1, 3):
+                                        record[key] = "formats[int(format)], Album"
+                                    
+                                except ValueError:
+                                    print("Invalid choice, please try again")
+                                    
+                                
+                        else: 
+                            record[key] = user_input
+                        break
+                    except ValueError:
+                        print(f"Invalid input for {key}. Expected {input_types[key].__name__}.")
         collection.append(record)
         print(f"Record {record['Title']} by {record['Artist']} added to the collection")
         return collection
@@ -140,7 +187,8 @@ def delete_record(collection, record) -> list:
 
 def list_collection(collection):
     """Function to list the collection
-
+        Lists the collection by the keys selected or everything if no keys.
+        Automatically removes spaces from the keys input
     Args:
         collection (list): collection as list of dictionaries
     """
@@ -163,7 +211,8 @@ def list_collection(collection):
 
 def save_collection(collection, filename):
     """Function to save the collection to a .csv file
-
+        Uses the filename from load_collection function to save the collection.
+        Uses csv.DictWriter to write the collection to the csv file
     Args:
         collection (list): collection as list of dictionaries
         filename (string): filename to save the collection to
@@ -176,12 +225,21 @@ def save_collection(collection, filename):
     print(f"Collection saved to {filename}")
     
 def print_stats(collection):
+    """Function to print out statistics about the collection
+        Counts the number of records, most common artist and average year of release
+    Args:
+        collection (_type_): Collection as list of dictionaries
+    """
     artist_occurrences = {}
     years = []
     for record in collection:
         artist = record['Artist']
         year = record['Released']
+        if not year:
+            continue
         if year.isdigit():
+            if int(year) == 0:
+                continue
             years.append(int(year))
         if artist in artist_occurrences:
             artist_occurrences[artist] += 1
@@ -190,7 +248,7 @@ def print_stats(collection):
     if len(collection) == 1:
         print("You have no records in your collection")
     else:
-        print(f"You have {len(collection)-1} records in your collection, your favourite artist is {max(artist_occurrences, key=artist_occurrences.get)}, the average year of release is {sum(years)/len(years):.0f}")
+        print(f"You have {len(collection)-1} records in your collection, your favourite artist is {max(artist_occurrences, key=artist_occurrences.get)}, and the average year of release is {sum(years)/len(years):.0f}")
     
 def main():
     collection, filename = load_collection()
