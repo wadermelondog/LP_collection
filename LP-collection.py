@@ -69,58 +69,52 @@ def add_record(collection) -> list:
             while True:
                 if key == 'Date Added':
                     record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                else:
-                    try:
-                        if input_types[key] == int:
-                            user_input = input(f"{key}: ")
-                            record[key] = int(user_input)
-                        elif key == "Collection Media Condition" or key == "Collection Sleeve Condition":
-                            while True:
-                                try: 
-                                    print(f"Choose {key}")
-                                    print("Choose from the following options:")
-                                    print("1. M, 2. NM, 3. VG+, 4. VG, 5. G+, 6. G, 7. F, 8. P")
-                                    conditions = {1: "M", 2: "NM", 3: "VG+", 4: "VG", 5: "G+", 6: "G", 7: "F", 8: "P"}
-                                    condition = input("Enter the choice: ")
-                                    if condition not in conditions:
-                                        print("Invalid choice, try again.")
-                                        continue
-                                    record[key] = conditions[int(condition)]
-                                    break
-                                except ValueError:
+                elif key == "Collection Media Condition" or key == "Collection Sleeve Condition":
+                    try:    
+                        while True:
+                            try: 
+                                print(f"Choose {key}")
+                                print("Choose from the following options:")
+                                print("1. M, 2. NM, 3. VG+, 4. VG, 5. G+, 6. G, 7. F, 8. P")
+                                conditions = {1: "M", 2: "NM", 3: "VG+", 4: "VG", 5: "G+", 6: "G", 7: "F", 8: "P"}
+                                condition = input("Enter the choice: ")
+                                if condition not in conditions:
                                     print("Invalid choice, try again.")
-                            break
-                        elif "Format" in key:
-                            while True:
-                                try:
-                                    print("Choose from the following options:")
-                                    print("1. LP, 2. 2xLP, 3. 3xLP, 4. 7\", 5. 10\", 6. 12\"")
-                                    formats = {1: "LP", 2: "2xLP", 3: "3xLP", 4: "7\"", 5: "10\"", 6: "12\""}
-                                    selected_format = input("Enter the choice: ")
-                                    
-                                    print("Format chosen:", formats[int(selected_format)])
-                                    print("Is it a reissue, compilation or 180g etc?")
-                                    choice = input("Yes or No: ")
-                                    if selected_format == "1" or selected_format == "2" or selected_format == "3":
-                                        if choice.lower() == "yes" or choice.lower() == "y":
-                                            record[key] = f"{formats[int(selected_format)]}, Album, {input('Enter the additional information: ')}"
-                                        elif choice.lower() == "no" or choice.lower() == "n":
-                                            record[key] = formats[int(selected_format)]
-                                        else:
-                                            print("Invalid choice, please try again")
-                                            continue  
-                                    else:
-                                        print("Format chosen:", formats[int(selected_format)])
-                                    break
-                                except ValueError:
+                                    continue
+                                record[key] = conditions[int(condition)]
+                                break
+                            except ValueError:
+                                print("Invalid choice, try again.")
+                        break
+                elif "Format" in key:
+                    while True:
+                        try:
+                            print("Choose from the following options:")
+                            print("1. LP, 2. 2xLP, 3. 3xLP, 4. 7\", 5. 10\", 6. 12\"")
+                            formats = {1: "LP", 2: "2xLP", 3: "3xLP", 4: "7\"", 5: "10\"", 6: "12\""}
+                            selected_format = input("Enter the choice: ")
+                            
+                            print("Format chosen:", formats[int(selected_format)])
+                            print("Is it a reissue, compilation or 180g etc?")
+                            choice = input("Yes or No: ")
+                            if selected_format == "1" or selected_format == "2" or selected_format == "3":
+                                if choice.lower() == "yes" or choice.lower() == "y":
+                                    record[key] = f"{formats[int(selected_format)]}, Album, {input('Enter the additional information: ')}"
+                                elif choice.lower() == "no" or choice.lower() == "n":
+                                    record[key] = formats[int(selected_format)]
+                                else:
                                     print("Invalid choice, please try again")
+                                    continue  
+                            else:
+                                print("Format chosen:", formats[int(selected_format)])
                             break
-                        else: 
+                        except ValueError:
+                            print("Invalid choice, please try again")
+                    break
+                else: 
                             user_input = input(f"{key}: ")
                             record[key] = user_input
-                        break
-                    except ValueError:
-                        print(f"Invalid input for {key}. Expected {input_types[key].__name__}.")
+                break
         collection.append(record)
         print(f"Record {record['Title']} by {record['Artist']} added to the collection")
         return collection
