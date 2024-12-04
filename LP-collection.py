@@ -1,54 +1,43 @@
 import csv
 from datetime import datetime
 
-def load_collection():
+def load_collection() -> list:
     """Function to load the collection from a .csv file
 
     Returns:
         list: collection as list of dictionaries
         string: filename   
     """
-    collection = []
-    filename = ""
-    folders = []
     while True:
+        collection = []
+        filename = input("Enter filename to load the collection from, leave empty for default (collection.csv): ")
+        if not filename:
+            filename = "collection.csv"
         try:
-            filename = input("Enter filename to load the collection from, leave empty for new collection (collection.csv): ")
             if filename.endswith(".csv"):
                 with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
                     reader = csv.DictReader(file)
                     collection = [row for row in reader]
-                    for record in collection:
-                        if record["CollectionFolder"] not in folders:
-                            folders.append(record["CollectionFolder"]) 
                 print(f"Collection loaded from {filename}")
-                return collection, filename, folders
+                return collection, filename
             else:
-                raise FileNotFoundError
+                print("Invalid filename, please try again.")
+                continue
         except FileNotFoundError:
             print(f"File {filename} not found.")
             choice = input("Would you like to create a new collection? Yes or No: ")
             if choice.lower() == "yes" or choice.lower() == "y":
-                print("Creating a new collection with the filename collection.csv")
-                collection = [{
-                "Catalog#": "",
-                "Artist": "",
-                "Title": "",
-                "Label": "",
-                "Format": "",
-                "Rating": "",
-                "Released": "",
-                "release_id": "",
-                "CollectionFolder": "",
-                "Date Added": "",
-                "Collection Media Condition": "",
-                "Collection Sleeve Condition": "",
-                "Collection Notes": ""}]
-                filename = "collection.csv"
-                break
-            else:
+                choice = str(input("Enter the name of the new collection without .csv: "))
+                print(f"Creating a new collection with the filename {choice}.csv")
+                collection = []
+                filename = choice + ".csv"
+            elif choice.lower() == "no" or choice.lower() == "n":
+                print("Trying again")
                 continue
-    return collection, filename, folders
+            else:  
+                print("Invalid choice, trying again")
+                continue
+            return collection, filename
 
 def add_record(collection) -> list:
     """Function to add a record to the collection
@@ -71,19 +60,19 @@ def add_record(collection) -> list:
         "Released": int,
         "release_id": str,
         "CollectionFolder": str,
+        "Date Added": str,
         "Collection Media Condition": str,
         "Collection Sleeve Condition": str,
         "Collection Notes": str}
     while True:
         print("Enter the following fields for the record:")
-        print(collection[0].keys())
-        for key in collection[0].keys():
+        print(input_types.keys())
+        for key in input_types.keys():
             while True:
                 if key == "Date Added":
                     record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
                 elif key == "Collection Media Condition" or key == "Collection Sleeve Condition":
                     try:    
-
                         print(f"Choose {key}")
                         print("Choose from the following options:")
                         print("1. M, 2. NM, 3. VG+, 4. VG, 5. G+, 6. G, 7. F, 8. P")
@@ -139,9 +128,35 @@ def add_record(collection) -> list:
                         if rating < 1 or rating > 5:
                             print("Invalid rating, please try again")
                             continue
+                        record[key] = rating
                     except ValueError:
                         print("Invalid input, please try again")
                         continue
+                elif key == "Released":
+                    try:
+                        year = int(input("Released: "))
+                        if year <= 0 or year > datetime.now().year + 1:
+                            print("Invalid year, please try again")
+                            continue
+                        record[key] = year
+                    except ValueError:
+                        print("Invalid input, please try again")
+                        continue
+                elif key == "CollectionFolder":
+                    folders = list(set([record['CollectionFolder'] for record in collection if record['CollectionFolder'] != ""]))
+                    print("Choose from the pre-existing folders or leave empty to create a new one")
+                    for i, folder in enumerate(folders):
+                        print(f"{i+1}. {folder}")
+                    try:
+                        folder_choice = int(input("Enter the choice: "))
+                        if not folder_choice:
+                            record[key] = input("Enter the new folder name: ")
+                        else:
+                            record[key] = folders[folder_choice-1]
+                    except ValueError:
+                        print("Invalid input, please try again")
+                        continue
+                    break
                 else: 
                     user_input = input(f"{key}: ")
                     try:
@@ -176,8 +191,8 @@ def add_record(collection) -> list:
             else:
                 print("Invalid choice, returning to the main menu")
                 break
-        
     return collection
+    
     
 def search_collection(collection) -> list:
     """Function to search the collection
@@ -216,7 +231,15 @@ def search_collection(collection) -> list:
                     print(f"{key}: {value}")
         choice = input(f"Enter the number of the record to modify or delete, or leave empty to return to the main menu: ")
         if choice:
-            modify_record(collection, search_results[int(choice)-1])
+            print("1. Modify, 2. Delete, 3. Return to the main menu")
+            choice = input("Enter your choice: ")
+            match choice:
+                case "1":
+                    modify_record(collection, search_results[int(choice)-1])
+                case "2":
+                    collection.remove()
+                case "3":
+                    pass
     return collection
 
 def modify_record(collection, record) -> list:
@@ -241,8 +264,7 @@ def modify_record(collection, record) -> list:
         elif not key:
             print("Returning to the main menu")
     except KeyError:
-        print(f"Incorrect key, please try again")
-        
+        print(f"Incorrect key, please try again")    
     return collection
 
 def delete_record(collection, record) -> list:
@@ -282,27 +304,30 @@ def list_collection(collection):
         for record in enumerate(collection):
             for key, value in record.items():
                 print(f"{key}: {value}")
-
-def manage_folders(collection):
-    pass
     
 
 def save_collection(collection, filename):
     """Function to save the collection to a .csv file
         Uses the filename from load_collection function to save the collection.
+        Handles the case where the collection is empty or has abnormalities.
         Uses csv.DictWriter to write the collection to the csv file
     Args:
         collection (list): collection as list of dictionaries
         filename (string): filename to save the collection to
     """
-    fieldnames = ['Catalog#', 'Artist', 'Title', 'Label', 'Format', 'Rating', 'Released', 'release_id', 'CollectionFolder', 'Collection Media Condition', 'Collection Sleeve Condition', 'Collection Notes', 'Date Added']
-    try:
-        with open(f'{filename}', mode='w', newline='', encoding='utf-8') as file:
-            writer = csv.DictWriter(file, fieldnames=fieldnames)
-            writer.writeheader()
-            for record in collection:
+    fieldnames = ['Catalog#', 'Artist', 'Title', 'Label', 'Format', 'Rating', 'Released', 'release_id', 'CollectionFolder', 'Date Added', 'Collection Media Condition', 'Collection Sleeve Condition', 'Collection Notes']
+    standardized_collection = []
+    for record in collection:
+        standardized_record = {key: record.get(key, "") for key in fieldnames}
+        standardized_collection.append(standardized_record)
+
+    with open(f'{filename}', mode='w', newline='', encoding='utf-8') as file:
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
+        writer.writeheader()
+        for record in standardized_collection:
+            if any(record.values()):  # Only write non-empty records
                 writer.writerow(record)
-        print(f"Collection saved to {filename}")
+    print(f"Collection saved to {filename}")
     
 def print_stats(collection):
     """Function to print out statistics about the collection
@@ -328,7 +353,7 @@ def print_stats(collection):
             artist_occurrences[artist] += 1
         else:
             artist_occurrences[artist] = 1
-    if len(collection) == 1:
+    if len(collection) < 1:
         print("You have no records in your collection")
     else:
         fav_artist = max(artist_occurrences, key=artist_occurrences.get) if artist_occurrences else "No favourite artist available"
@@ -338,10 +363,10 @@ def print_stats(collection):
             case _:
                 average_year = sum(years) / len(years)
                 average_year_str = f"{average_year:.0f}"
-        print(f"You have {len(collection)-1} records in your collection, your favourite artist is {fav_artist}, and the average year of release is {average_year_str}")
+        print(f"You have {len(collection)} records in your collection, your favourite artist is {fav_artist}, and the average year of release is {average_year_str}")
     
 def main():
-    collection, filename, folders = load_collection()
+    collection, filename = load_collection()
     while True:
         print("---------------------------")
         print("Welcome to your offline vinyl collection!")
@@ -351,24 +376,24 @@ def main():
         print("1. Add a new record")
         print("2. Search and modify")
         print("3. List the collection")
-        print("4. Manage folders")
         print("Leave empty to save and exit")
         print("-------------------------------")
         choice = input("Enter your choice: ")
-        if choice == '1':
+        if len(collection) < 1 and choice in ['2', '3']:
+            print("You have no records in your collection, please add some first.")
+            continue
+        elif choice == '1':
             collection = add_record(collection)
         elif choice == '2':
             collection = search_collection(collection)
         elif choice == '3':
             list_collection(collection)
-        elif choice == '4':
-            manage_folders(collection)
         elif not choice:
             save_collection(collection, filename)
             break
         else:
             print("Invalid choice, please try again")
-        
+            
         
 if __name__ == "__main__":
     main()
