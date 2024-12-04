@@ -66,10 +66,10 @@ def add_record(collection) -> list:
         print("Enter the following fields for the record:")
         print(collection[0].keys())
         for key in collection[0].keys():
-            while True:
-                if key == 'Date Added':
+            match key:
+                case 'Date Added':
                     record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                elif key == "Collection Media Condition" or key == "Collection Sleeve Condition":
+                case "Collection Media Condition" | "Collection Sleeve Condition":
                     try:    
 
                         print(f"Choose {key}")
@@ -85,7 +85,7 @@ def add_record(collection) -> list:
                     except ValueError:
                         print("Invalid choice, try again.")
                         continue
-                elif "Format" in key:
+                case "Format":
                     try:
                         print("Choose from the following options:")
                         print("1. LP, 2. 2xLP, 3. 3xLP, 4. 7\", 5. 10\", 6. 12\"")
@@ -108,7 +108,7 @@ def add_record(collection) -> list:
                     except ValueError:
                         print("Invalid choice, please try again")
                         continue
-                else: 
+                case _: 
                     user_input = input(f"{key}: ")
                     try:
                         if input_types[key] == int:
@@ -118,7 +118,7 @@ def add_record(collection) -> list:
                     except ValueError:
                         print(f"Invalid input for {key}. Expected {input_types[key].__name__}.")
                         continue
-                break
+                    break 
         print("Confirm the details of the record")
         for key, value in record.items():
             print(f"{key}: {value}")
