@@ -52,6 +52,7 @@ Discogsin formaattilista on vaan niin pitkä että todennäköisesti ainakin tä
 Hyvää edistystä tänään, oon useamman tunnin tätä rustannut englannin tehtävien sijaan.
 Lisää error handlingia, melkein voisin tehdä oman errorin mut en oo jaksanu...
 Kaikenlaista...
+Paljon viel bugeja mutta sain projektia eteenpäin.
 
 
 
