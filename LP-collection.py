@@ -1,5 +1,6 @@
 import csv
 from datetime import datetime
+
 def load_collection():
     """Function to load the collection from a .csv file
 
@@ -8,41 +9,51 @@ def load_collection():
         string: filename   
     """
     collection = []
-    filename = input("Enter the filename to load the collection from, leave empty for new collection.csv: ")
-    if not filename:
-        filename = "collection.csv"
-    try:
-        if not filename.endswith('.csv'):
-            print("Filename must end with .csv")
-        else:
-            with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
-                reader = csv.DictReader(file)
-                collection = [row for row in reader]
-        print(f"Collection loaded from {filename}")
-        return collection, filename
-    except FileNotFoundError:
-        print(f"File {filename} not found, starting with an empty collection")
-        collection = [{"Catalog#": "",
-            "Artist": "",
-            "Title": "",
-            "Label": "",
-            "Format": "",
-            "Rating": "",
-            "Released": "",
-            "release_id": "",
-            "CollectionFolder": "",
-            "Date Added": "",
-            "Collection Media Condition": "",
-            "Collection Sleeve Condition": "",
-            "Collection Notes": ""}]
-    return collection, filename
+    filename = ""
+    folders = []
+    while True:
+        try:
+            filename = input("Enter filename to load the collection from, leave empty for new collection (collection.csv): ")
+            if filename.endswith(".csv"):
+                with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
+                    reader = csv.DictReader(file)
+                    collection = [row for row in reader]
+                    for record in collection:
+                        if record["CollectionFolder"] not in folders:
+                            folders.append(record["CollectionFolder"]) 
+                print(f"Collection loaded from {filename}")
+                return collection, filename, folders
+            else:
+                raise FileNotFoundError
+        except FileNotFoundError:
+            print(f"File {filename} not found.")
+            choice = input("Would you like to create a new collection? Yes or No: ")
+            if choice.lower() == "yes" or choice.lower() == "y":
+                print("Creating a new collection with the filename collection.csv")
+                collection = [{
+                "Catalog#": "",
+                "Artist": "",
+                "Title": "",
+                "Label": "",
+                "Format": "",
+                "Rating": "",
+                "Released": "",
+                "release_id": "",
+                "CollectionFolder": "",
+                "Date Added": "",
+                "Collection Media Condition": "",
+                "Collection Sleeve Condition": "",
+                "Collection Notes": ""}]
+                filename = "collection.csv"
+                break
+            else:
+                continue
+    return collection, filename, folders
 
 def add_record(collection) -> list:
-    from datetime import datetime
     """Function to add a record to the collection
         Checks which input type is expected for the field and asks for it.
         Asks for the condition of the record by displaying the options for it.
-        
     Args:
         collection (list): collection as a list of dictionaries
 
@@ -91,23 +102,45 @@ def add_record(collection) -> list:
                         print("Choose from the following options:")
                         print("1. LP, 2. 2xLP, 3. 3xLP, 4. 7\", 5. 10\", 6. 12\"")
                         formats = {1: "LP", 2: "2xLP", 3: "3xLP", 4: "7\"", 5: "10\"", 6: "12\""}
-                        selected_format = input("Enter the choice: ")
-                        print("Format chosen:", formats[int(selected_format)])
+                        selected_format = int(input("Enter the choice: "))
+                        if selected_format not in formats:
+                            print("Invalid choice, please try again")
+                            continue
+                        print(f"Format chosen:, {formats[selected_format]}")
                         print("Is it a reissue, compilation or 180g etc?")
-                        choice = input("Yes or No: ")
-                        if selected_format == "1" or selected_format == "2" or selected_format == "3":
-                            if choice.lower() == "yes" or choice.lower() == "y":
-                                record[key] = f"{formats[int(selected_format)]}, Album, {input('Enter the additional information: ')}"
-                            elif choice.lower() == "no" or choice.lower() == "n":
-                                record[key] = formats[int(selected_format)]
+                        
+                        while True:
+                            choice = input("Yes or No: ")
+                            if selected_format in [1, 2, 3]:
+                                if choice.lower() == "yes" or choice.lower() == "y":
+                                    record[key] = f"{formats[int(selected_format)]}, Album, {input('Enter the additional information: ')}"
+                                    break
+                                elif choice.lower() == "no" or choice.lower() == "n":
+                                    record[key] = formats[selected_format]
+                                    break
+                                else:
+                                    print("Invalid choice, please try again")
                             else:
-                                print("Invalid choice, please try again")
-                                continue  
-                        else:
-                            print("Format chosen:", formats[int(selected_format)])
+                                if choice.lower() == "yes" or choice.lower() == "y":
+                                    record[key] = f"{formats[selected_format]}, {input('Enter the additional information: ')}"
+                                    break
+                                elif choice.lower() == "no" or choice.lower() == "n":
+                                    record[key] = formats[selected_format]
+                                    break
+                                else:
+                                    print("Invalid choice, please try again")
                         break
                     except ValueError:
                         print("Invalid choice, please try again")
+                        continue
+                elif key == "Rating":
+                    try: 
+                        rating = int(input("Rating from 1-5: "))
+                        if rating < 1 or rating > 5:
+                            print("Invalid rating, please try again")
+                            continue
+                    except ValueError:
+                        print("Invalid input, please try again")
                         continue
                 else: 
                     user_input = input(f"{key}: ")
@@ -262,13 +295,14 @@ def save_collection(collection, filename):
         collection (list): collection as list of dictionaries
         filename (string): filename to save the collection to
     """
-    fieldnames = collection[0].keys()
-    with open(f'{filename}', mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=fieldnames)
-        writer.writeheader()
-        for record in collection:
-            writer.writerow(record)
-    print(f"Collection saved to {filename}")
+    fieldnames = ['Catalog#', 'Artist', 'Title', 'Label', 'Format', 'Rating', 'Released', 'release_id', 'CollectionFolder', 'Collection Media Condition', 'Collection Sleeve Condition', 'Collection Notes', 'Date Added']
+    try:
+        with open(f'{filename}', mode='w', newline='', encoding='utf-8') as file:
+            writer = csv.DictWriter(file, fieldnames=fieldnames)
+            writer.writeheader()
+            for record in collection:
+                writer.writerow(record)
+        print(f"Collection saved to {filename}")
     
 def print_stats(collection):
     """Function to print out statistics about the collection
@@ -285,7 +319,7 @@ def print_stats(collection):
             continue
         try:
             year = int(year)
-            if year <= 0 or year > datetime.datetime.now().year:
+            if year <= 0 or year > datetime.now().year:
                 continue
             years.append(year)
         except ValueError:
@@ -304,19 +338,22 @@ def print_stats(collection):
             case _:
                 average_year = sum(years) / len(years)
                 average_year_str = f"{average_year:.0f}"
-        
         print(f"You have {len(collection)-1} records in your collection, your favourite artist is {fav_artist}, and the average year of release is {average_year_str}")
     
 def main():
-    collection, filename = load_collection()
+    collection, filename, folders = load_collection()
     while True:
+        print("---------------------------")
         print("Welcome to your offline vinyl collection!")
         print_stats(collection)
         print("Choose from the following options:")
+        print("-------------------------------")
         print("1. Add a new record")
         print("2. Search and modify")
         print("3. List the collection")
+        print("4. Manage folders")
         print("Leave empty to save and exit")
+        print("-------------------------------")
         choice = input("Enter your choice: ")
         if choice == '1':
             collection = add_record(collection)
@@ -324,6 +361,8 @@ def main():
             collection = search_collection(collection)
         elif choice == '3':
             list_collection(collection)
+        elif choice == '4':
+            manage_folders(collection)
         elif not choice:
             save_collection(collection, filename)
             break
