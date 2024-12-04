@@ -1,4 +1,5 @@
 import csv
+from datetime import datetime
 def load_collection():
     """Function to load the collection from a .csv file
 
@@ -66,10 +67,10 @@ def add_record(collection) -> list:
         print("Enter the following fields for the record:")
         print(collection[0].keys())
         for key in collection[0].keys():
-            match key:
-                case 'Date Added':
+            while True:
+                if key == "Date Added":
                     record[key] = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-                case "Collection Media Condition" | "Collection Sleeve Condition":
+                elif key == "Collection Media Condition" or key == "Collection Sleeve Condition":
                     try:    
 
                         print(f"Choose {key}")
@@ -85,7 +86,7 @@ def add_record(collection) -> list:
                     except ValueError:
                         print("Invalid choice, try again.")
                         continue
-                case "Format":
+                elif key == "Format":
                     try:
                         print("Choose from the following options:")
                         print("1. LP, 2. 2xLP, 3. 3xLP, 4. 7\", 5. 10\", 6. 12\"")
@@ -108,7 +109,7 @@ def add_record(collection) -> list:
                     except ValueError:
                         print("Invalid choice, please try again")
                         continue
-                case _: 
+                else: 
                     user_input = input(f"{key}: ")
                     try:
                         if input_types[key] == int:
@@ -118,7 +119,7 @@ def add_record(collection) -> list:
                     except ValueError:
                         print(f"Invalid input for {key}. Expected {input_types[key].__name__}.")
                         continue
-                    break 
+                break
         print("Confirm the details of the record")
         for key, value in record.items():
             print(f"{key}: {value}")
@@ -128,7 +129,21 @@ def add_record(collection) -> list:
             print(f"Record {record['Title']} by {record['Artist']} added to the collection")
             break
         else:
-            print("Record not added")
+            print("Record not added, would you want to modify something or try again?")
+            print("1. Modify, 2. Try again, 3. Return to the main menu")
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                collection.append(record)
+                modify_record(collection, record)
+                break
+            elif choice == "2":
+                continue
+            elif choice == "3":
+                break
+            else:
+                print("Invalid choice, returning to the main menu")
+                break
+        
     return collection
     
 def search_collection(collection) -> list:
@@ -182,6 +197,7 @@ def modify_record(collection, record) -> list:
     Returns:
         list: collection, modified
     """
+    print(f"{record.keys()}")
     print(f"{record.values()}")
     try:
         key = input(f"Enter the key to modify, or leave empty to return to the main menu: ")
@@ -246,8 +262,9 @@ def save_collection(collection, filename):
         collection (list): collection as list of dictionaries
         filename (string): filename to save the collection to
     """
+    fieldnames = collection[0].keys()
     with open(f'{filename}', mode='w', newline='', encoding='utf-8') as file:
-        writer = csv.DictWriter(file, fieldnames=collection[0].keys())
+        writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         for record in collection:
             writer.writerow(record)
@@ -264,12 +281,15 @@ def print_stats(collection):
     for record in collection:
         artist = record['Artist']
         year = record['Released']
-        if not year:
+        if year == "":
             continue
-        if isinstance(year, int):
-            if int(year) == 0:
+        try:
+            year = int(year)
+            if year <= 0 or year > datetime.datetime.now().year:
                 continue
-            years.append(int(year))
+            years.append(year)
+        except ValueError:
+            continue
         if artist in artist_occurrences:
             artist_occurrences[artist] += 1
         else:
@@ -277,7 +297,15 @@ def print_stats(collection):
     if len(collection) == 1:
         print("You have no records in your collection")
     else:
-        print(f"You have {len(collection)-1} records in your collection, your favourite artist is {max(artist_occurrences, key=artist_occurrences.get)}, and the average year of release is {sum(years)/len(years):.0f}")
+        fav_artist = max(artist_occurrences, key=artist_occurrences.get) if artist_occurrences else "No favourite artist available"
+        match years:
+            case []:
+                average_year_str = "No records with valid year of release available"
+            case _:
+                average_year = sum(years) / len(years)
+                average_year_str = f"{average_year:.0f}"
+        
+        print(f"You have {len(collection)-1} records in your collection, your favourite artist is {fav_artist}, and the average year of release is {average_year_str}")
     
 def main():
     collection, filename = load_collection()
