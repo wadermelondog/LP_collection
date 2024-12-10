@@ -1,4 +1,4 @@
-# Lp kokoelma
+# LP kokoelma
 Tämä on projekti python kurssille.
 
 ### Perusidea
@@ -64,5 +64,10 @@ klo 23:34, implementoin uutta funktiota, confirmation. Käytän tuota yes or no 
 Otin kans wakatime käyttöön
 
 ![Flowchart](/Dokumentaatio/flowchart.png)
+
+## 11/12/2024
+Case insensitive handling ja confirmation funktio hoidettu.
+
+
 
 
