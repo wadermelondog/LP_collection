@@ -252,7 +252,7 @@ def search_collection(collection) -> list:
                 case "1":
                     modify_record(collection, search_results[int(choice)-1])
                 case "2":
-                    collection.remove()
+                    delete_record(collection, search_results[int(choice)-1])
                 case "3":
                     pass
     return collection
@@ -384,7 +384,7 @@ def main():
     collection, filename = load_collection()
     while True:
         print("---------------------------")
-        print("Welcome to your offline vinyl collection!")
+        print("Welcome to your offline record collection!")
         print_stats(collection)
         print("Choose from the following options:")
         print("-------------------------------")
