@@ -53,8 +53,9 @@ def load_collection() -> list:
 
 def add_record(collection) -> list:
     """Function to add a record to the collection
+        Automatically inserts the current date and time for the Date Added field.
         Checks which input type is expected for the field and asks for it.
-        Asks for the condition of the record by displaying the options for it.
+        Asks for the condition of the record or sleeve by displaying the options for it.
     Args:
         collection (list): collection as a list of dictionaries
 
@@ -224,7 +225,13 @@ def search_collection(collection) -> list:
         list: collection, modified or not
     """
     print(", ".join(collection[0].keys()))
-    search_key = input(f"Enter the search key, leave empty to search everything: ")
+    while True:
+        search_key = input(f"Enter the search key, leave empty to search everything: ")
+        if search_key not in collection[0] and search_key != "":
+            print("Invalid key, please try again")
+            continue
+        else:
+            break        
     search_term = input("Enter the search term: ")
     search_results = []
     for record in collection:
@@ -327,6 +334,10 @@ def list_collection(collection):
                     continue
                 print(f"{key}: {value}")
             print("---------------------------")
+    print("End of collection")
+    choice = input("Press Enter to return to the main menu: ")
+    if not choice:
+        pass
     
 
 def save_collection(collection, filename):
