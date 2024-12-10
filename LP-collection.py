@@ -2,15 +2,11 @@ import csv
 from datetime import datetime
 import os.path
 
-def load_collection() -> list:
+def load_collection() -> tuple[list, str]:
     """Function to load the collection from a .csv file
-        Uses the filename from the user input to load the collection.
-        Handles the case where the file is not found or doesnt have the .csv extension.
-        Also handles the case where the user wants to create a new collection.
-        Returns an empty collection with the filename if the file is not found.
+        Asks for the filename to load the collection from, if empty, creates a new collection.
     Returns:
-        list: collection as list of dictionaries
-        string: filename   
+        tuple[list, str]: tuple with the collection and filename
     """
     while True:
         collection = []
@@ -56,6 +52,10 @@ def add_record(collection) -> list:
         Automatically inserts the current date and time for the Date Added field.
         Checks which input type is expected for the field and asks for it.
         Asks for the condition of the record or sleeve by displaying the options for it.
+        Asks for the format of the record by displaying the options for it.
+        Asks for the rating of the record and makes sure it is 1-5
+        Asks for the year of release and makes sure it is a valid year
+        Asks for the folder of the record and displays the options for it and handles the addition of a new folder
     Args:
         collection (list): collection as a list of dictionaries
 
