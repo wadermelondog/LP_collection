@@ -111,25 +111,21 @@ def add_record(collection) -> list:
                         print("Is it a reissue, compilation or 180g etc?")
                         
                         while True:
-                            choice = input("Yes or No: ")
+                            choice = confirmation()
                             if selected_format in [1, 2, 3]:
-                                if choice.lower() == "yes" or choice.lower() == "y":
+                                if choice == True:
                                     record[key] = f"{formats[int(selected_format)]}, Album, {input('Enter the additional information: ')}"
                                     break
-                                elif choice.lower() == "no" or choice.lower() == "n":
+                                else:
                                     record[key] = formats[selected_format]
                                     break
-                                else:
-                                    print("Invalid choice, please try again")
                             else:
-                                if choice.lower() == "yes" or choice.lower() == "y":
+                                if choice == True:
                                     record[key] = f"{formats[selected_format]}, {input('Enter the additional information: ')}"
                                     break
-                                elif choice.lower() == "no" or choice.lower() == "n":
-                                    record[key] = formats[selected_format]
-                                    break
                                 else:
-                                    print("Invalid choice, please try again")
+                                    record[key] = formats[selected_format]
+                                    break         
                         break
                     except ValueError:
                         print("Invalid choice, please try again")
@@ -192,8 +188,8 @@ def add_record(collection) -> list:
         print("Confirm the details of the record")
         for key, value in record.items():
             print(f"{key}: {value}")
-        confirm = input("Confirm, Yes or No: ")
-        if confirm.lower() == "yes" or confirm.lower() == "y":
+        confirm = confirmation()
+        if confirm == True:
             collection.append(record)
             print(f"Record {record['Title']} by {record['Artist']} added to the collection")
             print("1. Add another record, 2. Return to the main menu")
@@ -234,23 +230,23 @@ def search_collection(collection) -> list:
     """
     print(", ".join(collection[0].keys()))
     while True:
-        search_key = input(f"Enter the search key, leave empty to search everything: ")
-        if search_key not in collection[0] and search_key != "":
+        search_key = input(f"Enter the search key, leave empty to search everything: ").lower()
+        if search_key not in [key.lower() for key in collection[0].keys()] and search_key != "":
             print("Invalid key, please try again")
             continue
         else:
             break        
-    search_term = input("Enter the search term: ")
+    search_term = input("Enter the search term: ").lower()
     search_results = []
     for record in collection:
         if search_key == "":
             for key, value in record.items():
-                if search_term.lower() in value.lower():
+                if search_term in value.lower():
                     search_results.append(record)
                     break
         else:
             for key, value in record.items():
-                if key == search_key and search_term.lower() in value.lower():
+                if key.lower() == search_key and search_term.lower() in value.lower():
                     search_results.append(record)
                     break
     if not search_results:
@@ -277,16 +273,12 @@ def search_collection(collection) -> list:
                                 modify_record(collection, search_results[record_index])
                                 break
                             case "2":
-                                del_choice = input("Are you sure you want to delete, Yes or No: ")
-                                if del_choice.lower() == "yes" or del_choice.lower() == "y":
+                                if confirmation():
                                     collection = delete_record(collection, search_results[record_index])
                                     break
-                                elif del_choice.lower() == "no" or del_choice.lower() == "n":
+                                else:
                                     print("Record not deleted")
                                     break
-                                else:
-                                    print("Invalid choice, please try again")
-                                    continue
                             case "3":
                                 break
                             case _:
@@ -305,32 +297,37 @@ def modify_record(collection, record) -> list:
     Args:
         collection (list): collection as list of dictionaries
         record (dict): record to modify
-        key (string): key to modify
-
     Returns:
         list: collection, modified
     """
+    print("Current details:")
     for key, value in record.items():
             print(f"{key}: {value}")
     try:
         while True:
-            key = input(f"Enter the key to modify, or leave empty to return to the main menu: ")
-            if key in record:
-                value = input(f"Enter the new value for {key}: ")
-                record[key] = value
-                print(f"Record {record['Title']} by {record['Artist']} modified.")
-                print("1. Modify another value, 2. Return to the main menu?")
-                choice = input("Enter your choice: ")
-                if choice == "1":
-                    continue
-                elif choice == "2":
+            key_input = input(f"Enter the key to modify, or leave empty to return to the main menu: ").lower()
+            if key_input == "":
+                print("Returning to the main menu")
+                break
+            for key in record.keys():
+                if key_input == key.lower():
+                    value = input(f"Enter the new value for {key}: ")
+                    record[key] = value
+                    print(f"Record {record['Title']} by {record['Artist']} modified.")
                     break
-                else:
-                    print("Invalid choice, returning to the main menu")
-                    continue
-            elif key not in record and key != "":
+            else:
                 print("Invalid key, please try again")
                 continue
+            
+            print("1. Modify another value, 2. Return to the main menu?")
+            choice = input("Enter your choice: ")
+            if choice == "1":
+                continue
+            elif choice == "2":
+                break
+            else:
+                print("Invalid choice, returning to the main menu")
+                break
     except KeyError:
         print(f"Incorrect key, please try again")    
     return collection
@@ -450,16 +447,34 @@ def print_stats(collection):
             print(f"You have {len(collection)} records in your collection, your favourite artist is {fav_artist} with {max_count} records, and the average year of release is {average_year_str}")
         else:
             print(f"You have {len(collection)} records in your collection, the average year of release is {average_year_str}")
+            
+            
+def confirmation() -> bool:
+    """Function to ask for confirmation
+        Asks for confirmation, returns True or false.
+    Returns:
+        bool: True or False
+    """
+    while True:
+        choice = input("Yes or No: ")
+        if choice.lower() == "yes" or choice.lower() == "y":
+            return True
+        elif choice.lower() == "no" or choice.lower() == "n":
+            return False
+        else:
+            print("Invalid choice, please try again")
+            continue
+
 def main():
     collection, filename = load_collection()
     while True:
         print("---------------------------")
-        print("Welcome to your offline record collection!")
+        print("Welcome to your record collection!")
         print_stats(collection)
         print("Choose from the following options:")
         print("-------------------------------")
         print("1. Add a new record")
-        print("2. Search and modify")
+        print("2. Search")
         print("3. List the collection")
         print("Leave empty to exit")
         print("-------------------------------")
@@ -474,12 +489,13 @@ def main():
         elif choice == '3':
             list_collection(collection)
         elif not choice:
-            save_collection(collection, filename)
+            print("Exiting the program")
+            if confirmation():
+                save_collection(collection, filename)
             break
         else:
             print("Invalid choice, please try again")
-            
-        save_collection(collection, filename)
+            continue
             
         
 if __name__ == "__main__":

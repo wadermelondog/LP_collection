@@ -60,7 +60,8 @@ Ajattelin ehkä joskus lisätä sellaisen ominaisuuden että voisi olla asetukse
 Ehkä jos joskus oikein innostun voisin API:n avulla hakea kokoelman keskiarvon tms. Tähän vaatis vaan aika paljon error handlingiä yms ja sinänsä discogsin sivulla on jo se suoraan niin emt.
 Hieman tulee kyseenalaistettua tuota list collection ominaisuutta, sitä ei ehkä tuu käytettyä yhtä paljon kuin searchia kun search on sen verran hyvä funktio... 
 TODO: case insensitive handling kaikkeen  
-
+klo 23:34, implementoin uutta funktiota, confirmation. Käytän tuota yes or no hässäkkää niin paljon että teen sen vaan suoraan omaan funktioon niin helpompaa.
+Otin kans wakatime käyttöön
 
 ![Flowchart](/Dokumentaatio/flowchart.png)
 
