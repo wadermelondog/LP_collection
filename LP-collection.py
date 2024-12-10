@@ -155,10 +155,15 @@ def add_record(collection) -> list:
                         continue
                 elif key == "CollectionFolder":
                     folders = list(set([record['CollectionFolder'] for record in collection if record['CollectionFolder'] != ""]))
-                    print("Choose from the pre-existing folders or leave empty to create a new one")
+                    if folders != []:
+                        print("Choose from the pre-existing folders or leave empty to create a new one")
                     for i, folder in enumerate(folders):
                         print(f"{i+1}. {folder}")
                     try:
+                        if folders == []:
+                            print("No folders found, creating a new one")
+                            record[key] = input("Enter the name of the new folder: ")
+                            break
                         folder_choice = input("Enter the choice: ")
                         if folder_choice:
                             if folder_choice.isdigit():
@@ -327,8 +332,9 @@ def list_collection(collection):
 def save_collection(collection, filename):
     """Function to save the collection to a .csv file
         Uses the filename from load_collection function to save the collection.
-        Handles the case where the collection is empty or has abnormalities.
+        Handles the case where the collection is empty or has abnormalities in the records.
         Uses csv.DictWriter to write the collection to the csv file
+        Also writes only records that have any values in them, although this is also handled in the add record function.
     Args:
         collection (list): collection as list of dictionaries
         filename (string): filename to save the collection to
@@ -343,7 +349,7 @@ def save_collection(collection, filename):
         writer = csv.DictWriter(file, fieldnames=fieldnames)
         writer.writeheader()
         for record in standardized_collection:
-            if any(record.values()):  # Only write non-empty records
+            if any(record.values()):
                 writer.writerow(record)
     print(f"Collection saved to {filename}")
     
@@ -367,6 +373,8 @@ def print_stats(collection):
             years.append(year)
         except ValueError:
             continue
+        if artist == "":
+            continue
         if artist in artist_occurrences:
             artist_occurrences[artist] += 1
         else:
@@ -374,15 +382,22 @@ def print_stats(collection):
     if len(collection) < 1:
         print("You have no records in your collection")
     else:
-        fav_artist = max(artist_occurrences, key=artist_occurrences.get) if artist_occurrences else "No favourite artist available"
+        max_count = max(artist_occurrences.values()) if artist_occurrences else 0
+        fav_artists = [artist for artist, count in artist_occurrences.items() if count == max_count]
+        fav_artists_str = ", ".join(fav_artists)
+        fav_artist = fav_artists[0] if len(fav_artists) == 1 else ""
         match years:
             case []:
                 average_year_str = "No records with valid year of release available"
             case _:
                 average_year = sum(years) / len(years)
                 average_year_str = f"{average_year:.0f}"
-        print(f"You have {len(collection)} records in your collection, your favourite artist is {fav_artist}, and the average year of release is {average_year_str}")
-    
+        if len(fav_artists) > 1:
+            print(f"You have {len(collection)} records in your collection, your favourite artists are {fav_artists_str} with {max_count} records each, and the average year of release is {average_year_str}")      
+        elif len(fav_artists) == 1:
+            print(f"You have {len(collection)} records in your collection, your favourite artist is {fav_artist} with {max_count} records, and the average year of release is {average_year_str}")
+        else:
+            print(f"You have {len(collection)} records in your collection, the average year of release is {average_year_str}")
 def main():
     collection, filename = load_collection()
     while True:
@@ -394,7 +409,7 @@ def main():
         print("1. Add a new record")
         print("2. Search and modify")
         print("3. List the collection")
-        print("Leave empty to save and exit")
+        print("Leave empty to exit")
         print("-------------------------------")
         choice = input("Enter your choice: ")
         if len(collection) < 1 and choice in ['2', '3']:
