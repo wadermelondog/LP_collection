@@ -67,7 +67,7 @@ Otin kans wakatime käyttöön
 
 ## 11/12/2024
 Case insensitive handling ja confirmation funktio hoidettu.
-
+Sain idean että viimeinen funktio minkä toteutan on handle folders funktio et vois tos search funktiossa vaikka siirtää kaikki hakutulokset eri folderiin tms.
 
 
 
