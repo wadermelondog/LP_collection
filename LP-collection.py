@@ -1,20 +1,35 @@
 import csv
 from datetime import datetime
+import os.path
 
 def load_collection() -> list:
     """Function to load the collection from a .csv file
-
+        Uses the filename from the user input to load the collection.
+        Handles the case where the file is not found or doesnt have the .csv extension.
+        Also handles the case where the user wants to create a new collection.
+        Returns an empty collection with the filename if the file is not found.
     Returns:
         list: collection as list of dictionaries
         string: filename   
     """
     while True:
         collection = []
-        filename = input("Enter filename to load the collection from, leave empty for default (collection.csv): ")
-        if not filename:
-            filename = "collection.csv"
+        filename = input("Enter filename to load the collection from, leave empty for new collection: ")
         try:
-            if filename.endswith(".csv"):
+            if filename == "":
+                while True:
+                    choice = str(input("Enter the name of the new collection without .csv, or leave empty for default: "))
+                    if not choice:
+                        choice = "collection"
+                    if os.path.isfile(choice + ".csv"):
+                        print("File already exists, please choose another name.")
+                        continue
+                    else:
+                        print(f"Creating a new collection with the filename {choice}.csv")
+                        collection = []
+                        filename = choice + ".csv"
+                        return collection, filename
+            elif filename.endswith(".csv"):
                 with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
                     reader = csv.DictReader(file)
                     collection = [row for row in reader]
@@ -33,22 +48,7 @@ def load_collection() -> list:
                     continue
         except FileNotFoundError:
             print(f"File {filename} not found.")
-            while True:
-                choice = input("Would you like to create a new collection? Yes or No: ")
-                if choice.lower() == "yes" or choice.lower() == "y":
-                    choice = str(input("Enter the name of the new collection without .csv, or leave empty for default: "))
-                    if not choice:
-                        choice = "collection"
-                    print(f"Creating a new collection with the filename {choice}.csv")
-                    collection = []
-                    filename = choice + ".csv"
-                    return collection, filename
-                elif choice.lower() == "no" or choice.lower() == "n":
-                    print("Trying again")
-                    break
-                else:  
-                    print("Invalid choice, trying again")
-                    continue
+            
                 
 
 def add_record(collection) -> list:
@@ -196,7 +196,15 @@ def add_record(collection) -> list:
         if confirm.lower() == "yes" or confirm.lower() == "y":
             collection.append(record)
             print(f"Record {record['Title']} by {record['Artist']} added to the collection")
-            break
+            print("1. Add another record, 2. Return to the main menu")
+            conf_choice = input("Enter your choice: ")
+            if conf_choice == "1":
+                continue
+            elif conf_choice == "2":
+                break
+            else:
+                print("Invalid choice, returning to the main menu")
+                break
         else:
             print("Record not added, would you want to modify something or try again?")
             print("1. Modify, 2. Try again, 3. Return to the main menu")
@@ -257,16 +265,38 @@ def search_collection(collection) -> list:
                 else:
                     print(f"{key}: {value}")
         choice = input(f"Enter the number of the record to modify or delete, or leave empty to return to the main menu: ")
-        if choice:
-            print("1. Modify, 2. Delete, 3. Return to the main menu")
-            choice = input("Enter your choice: ")
-            match choice:
-                case "1":
-                    modify_record(collection, search_results[int(choice)-1])
-                case "2":
-                    delete_record(collection, search_results[int(choice)-1])
-                case "3":
-                    pass
+        while True:
+            if choice:
+                try:
+                    record_index = int(choice) - 1
+                    if 0 <= record_index < len(search_results):
+                        print("1. Modify, 2. Delete, 3. Return to the main menu")
+                        mod_choice = input("Enter your choice: ")
+                        match mod_choice:
+                            case "1":
+                                modify_record(collection, search_results[record_index])
+                                break
+                            case "2":
+                                del_choice = input("Are you sure you want to delete, Yes or No: ")
+                                if del_choice.lower() == "yes" or del_choice.lower() == "y":
+                                    collection = delete_record(collection, search_results[record_index])
+                                    break
+                                elif del_choice.lower() == "no" or del_choice.lower() == "n":
+                                    print("Record not deleted")
+                                    break
+                                else:
+                                    print("Invalid choice, please try again")
+                                    continue
+                            case "3":
+                                break
+                            case _:
+                                print("Invalid choice")
+                                continue
+                except ValueError:
+                    print("Invalid choice, please try again")
+                    continue
+                
+                        
     return collection
 
 def modify_record(collection, record) -> list:
@@ -283,13 +313,24 @@ def modify_record(collection, record) -> list:
     for key, value in record.items():
             print(f"{key}: {value}")
     try:
-        key = input(f"Enter the key to modify, or leave empty to return to the main menu: ")
-        if key in record:
-            value = input(f"Enter the new value for {key}: ")
-            record[key] = value
-            print(f"Record {record['Title']} by {record['Artist']} modified in the collection")
-        elif not key:
-            print("Returning to the main menu")
+        while True:
+            key = input(f"Enter the key to modify, or leave empty to return to the main menu: ")
+            if key in record:
+                value = input(f"Enter the new value for {key}: ")
+                record[key] = value
+                print(f"Record {record['Title']} by {record['Artist']} modified.")
+                print("1. Modify another value, 2. Return to the main menu?")
+                choice = input("Enter your choice: ")
+                if choice == "1":
+                    continue
+                elif choice == "2":
+                    break
+                else:
+                    print("Invalid choice, returning to the main menu")
+                    continue
+            elif key not in record and key != "":
+                print("Invalid key, please try again")
+                continue
     except KeyError:
         print(f"Incorrect key, please try again")    
     return collection
