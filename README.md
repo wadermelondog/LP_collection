@@ -1,10 +1,10 @@
 # Lp kokoelma
 Tämä on projekti python kurssille.
 
-Perusidea
+### Perusidea
 Python ohjelma joka ylläpitää vinyylikokoelmaani.
 
-Funktiot
+### Funktiot
 Ainakin:
 
 Hakufunktio kokoelmasta: parametreina täytyy voida olla käytännössä mikä vaan levyn parametri, kunnon perusteella tai vaikka julkaisijan.
@@ -20,7 +20,7 @@ Levyn tietojen poistaminen
 Lauri Turunen 23/09/2024
 
 
-26/10/2024 
+## 26/10/2024 
 
 Ideointia projektia varten,
 Funktioihin muutoksia.
@@ -56,6 +56,6 @@ Paljon viel bugeja mutta sain projektia eteenpäin.
 
 ## 10/12/2024
 Lisää bugfixejä ja error handlingiä
-Ajattelin ehkä joskus lisätä sellaisen ominaisuuden että voisi olla asetukset tiedosto johon se tallentaa mm. kokoelman filename ja se osaa sitten ladata sen aina.
+Ajattelin ehkä joskus lisätä sellaisen ominaisuuden että voisi olla asetukset tiedosto johon se tallentaa mm. kokoelman filename ja se osaa sitten ladata sen aina. Ehkä jos joskus oikein innostun voisin API:n avulla hakea kokoelman keskiarvon tms. 
 
 
