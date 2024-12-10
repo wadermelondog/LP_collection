@@ -21,23 +21,35 @@ def load_collection() -> list:
                 print(f"Collection loaded from {filename}")
                 return collection, filename
             else:
-                print("Invalid filename, please try again.")
-                continue
+                try:
+                    filename = filename + ".csv"
+                    with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
+                        reader = csv.DictReader(file)
+                        collection = [row for row in reader]
+                    print(f"Collection loaded from {filename}")
+                    return collection, filename
+                except FileNotFoundError:
+                    print("Invalid filename, please try again.")
+                    continue
         except FileNotFoundError:
             print(f"File {filename} not found.")
-            choice = input("Would you like to create a new collection? Yes or No: ")
-            if choice.lower() == "yes" or choice.lower() == "y":
-                choice = str(input("Enter the name of the new collection without .csv: "))
-                print(f"Creating a new collection with the filename {choice}.csv")
-                collection = []
-                filename = choice + ".csv"
-            elif choice.lower() == "no" or choice.lower() == "n":
-                print("Trying again")
-                continue
-            else:  
-                print("Invalid choice, trying again")
-                continue
-            return collection, filename
+            while True:
+                choice = input("Would you like to create a new collection? Yes or No: ")
+                if choice.lower() == "yes" or choice.lower() == "y":
+                    choice = str(input("Enter the name of the new collection without .csv, or leave empty for default: "))
+                    if not choice:
+                        choice = "collection"
+                    print(f"Creating a new collection with the filename {choice}.csv")
+                    collection = []
+                    filename = choice + ".csv"
+                    return collection, filename
+                elif choice.lower() == "no" or choice.lower() == "n":
+                    print("Trying again")
+                    break
+                else:  
+                    print("Invalid choice, trying again")
+                    continue
+                
 
 def add_record(collection) -> list:
     """Function to add a record to the collection
@@ -65,8 +77,7 @@ def add_record(collection) -> list:
         "Collection Sleeve Condition": str,
         "Collection Notes": str}
     while True:
-        print("Enter the following fields for the record:")
-        print(input_types.keys())
+        print("Enter the details for the record:")
         for key in input_types.keys():
             while True:
                 if key == "Date Added":
@@ -135,7 +146,7 @@ def add_record(collection) -> list:
                 elif key == "Released":
                     try:
                         year = int(input("Released: "))
-                        if year <= 0 or year > datetime.now().year + 1:
+                        if year <= 1900 or year > datetime.now().year + 1:
                             print("Invalid year, please try again")
                             continue
                         record[key] = year
@@ -148,11 +159,15 @@ def add_record(collection) -> list:
                     for i, folder in enumerate(folders):
                         print(f"{i+1}. {folder}")
                     try:
-                        folder_choice = int(input("Enter the choice: "))
-                        if not folder_choice:
-                            record[key] = input("Enter the new folder name: ")
-                        else:
-                            record[key] = folders[folder_choice-1]
+                        folder_choice = input("Enter the choice: ")
+                        if folder_choice:
+                            if folder_choice.isdigit():
+                                record[key] = folders[int(folder_choice)-1]
+                            else:
+                                print("Invalid choice, please try again")
+                                continue
+                        elif not folder_choice:
+                            record[key] = input("Enter the name of the new folder: ")
                     except ValueError:
                         print("Invalid input, please try again")
                         continue
@@ -253,11 +268,11 @@ def modify_record(collection, record) -> list:
     Returns:
         list: collection, modified
     """
-    print(f"{record.keys()}")
-    print(f"{record.values()}")
+    for key, value in record.items():
+            print(f"{key}: {value}")
     try:
         key = input(f"Enter the key to modify, or leave empty to return to the main menu: ")
-        if key:
+        if key in record:
             value = input(f"Enter the new value for {key}: ")
             record[key] = value
             print(f"Record {record['Title']} by {record['Artist']} modified in the collection")
@@ -393,6 +408,8 @@ def main():
             break
         else:
             print("Invalid choice, please try again")
+            
+        save_collection(collection, filename)
             
         
 if __name__ == "__main__":

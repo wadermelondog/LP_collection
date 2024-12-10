@@ -54,5 +54,8 @@ Lisää error handlingia, melkein voisin tehdä oman errorin mut en oo jaksanu..
 Kaikenlaista...
 Paljon viel bugeja mutta sain projektia eteenpäin.
 
+## 10/12/2024
+Lisää bugfixejä ja error handlingiä
+Ajattelin ehkä joskus lisätä sellaisen ominaisuuden että voisi olla asetukset tiedosto johon se tallentaa mm. kokoelman filename ja se osaa sitten ladata sen aina.
 
 
