@@ -310,15 +310,18 @@ def list_collection(collection):
         keys = keys.replace(" ", "")
     if keys:
         keys = keys.split(',')
+        print(f"{keys}")
+        for record in collection:
+            for key in keys:
+                print(f"{record.get(key, '')} ", end="")
+            print("---------------------------")              
+    else:
         for record in collection:
             for key, value in record.items():
-                if key in keys:
-                    print(f"{key}: {value}")
-            print("--------------------")            
-    else:
-        for record in enumerate(collection):
-            for key, value in record.items():
+                if value == "":
+                    continue
                 print(f"{key}: {value}")
+            print("---------------------------")
     
 
 def save_collection(collection, filename):

@@ -17,7 +17,7 @@ Levyn tietojen muokkaaminen
 
 Levyn tietojen poistaminen
 
-Lauri Turunen 23/09/2024
+#### Lauri Turunen 23/09/2024
 
 
 ## 26/10/2024 
@@ -49,13 +49,13 @@ Discogsin formaattilista on vaan niin pitkä että todennäköisesti ainakin tä
 ![Formaattilista](/Dokumentaatio/image.png)
 
 ## 04/12/2024
-Hyvää edistystä tänään, oon useamman tunnin tätä rustannut englannin tehtävien sijaan.
+Hyvää edistystä tänään, oon useamman tunnin tätä rustannut englannin tehtävien sijaan...
 Lisää error handlingia, melkein voisin tehdä oman errorin mut en oo jaksanu...
 Kaikenlaista...
 Paljon viel bugeja mutta sain projektia eteenpäin.
 
 ## 10/12/2024
 Lisää bugfixejä ja error handlingiä
-Ajattelin ehkä joskus lisätä sellaisen ominaisuuden että voisi olla asetukset tiedosto johon se tallentaa mm. kokoelman filename ja se osaa sitten ladata sen aina. Ehkä jos joskus oikein innostun voisin API:n avulla hakea kokoelman keskiarvon tms. 
+Ajattelin ehkä joskus lisätä sellaisen ominaisuuden että voisi olla asetukset tiedosto johon se tallentaa mm. kokoelman filename ja se osaa sitten ladata sen aina. Ehkä jos joskus oikein innostun voisin API:n avulla hakea kokoelman keskiarvon tms. Tähän vaatis vaan aikapaljon error handlingiä yms ja sinänsä discogsin sivulla on jo se suoraan niin emt.
 
 
