@@ -7,7 +7,7 @@ Ohjelmoinnin perusteet: Harjoitustyön palautus
 Linkki harjoitustyön dokumentointiin:
 [Linkki](https://gitlab.labranet.jamk.fi/AG3154/loppuprojektitest)
 Linkki harjoitustyön esittelyvideoon:
-[![Linkki](/Dokumentaatio/flowchart.png)](https://www.youtube.com/watch?v=cgmUjSqBuSg)
+[Linkki](https://www.youtube.com/watch?v=cgmUjSqBuSg)
 
 4-5
 <br>
