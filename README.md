@@ -5,7 +5,7 @@ Ohjelmoinnin perusteet: Harjoitustyön palautus
 ### Turunen Lauri \[AG3154\]  
   
 Linkki harjoitustyön dokumentointiin:
-[Linkki](https://gitlab.labranet.jamk.fi/AG3154/loppuprojektitest)
+[Linkki](https://gitlab.labranet.jamk.fi/AG3154/loppuprojektitest)  
 Linkki harjoitustyön esittelyvideoon:
 [Linkki](https://www.youtube.com/watch?v=cgmUjSqBuSg)
 
