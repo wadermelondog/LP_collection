@@ -1,69 +1,86 @@
-# LP collection
-This is a project for my programming basics (python) course.
-This .md file is just an AI translated version of the original, stuff on the top may be old.
+# LP Collection
 
-### Basic idea
-A simple program to update my LP-record collection
+## Submission
+**Introduction to Programming: Final Project Submission**  
+### Lauri Turunen \[AG3154\]  
+  
+Link to project documentation:  
+[Link](https://gitlab.labranet.jamk.fi/AG3154/loppuprojektitest)
+
+4-5  
+<br>  
+**SELF-ASSESSMENT**
+
+**Strengths**  
++ The application works as intended.  
++ I believe I utilized the techniques taught in the course quite well.  
++ CSV file handling works well.  
++ Input error handling is decent, even though `except` errors were only minimally used.  
++ The flowchart is a good addition, in my opinion.
+
+**Areas for Improvement**  
+- The `add_record` function became somewhat bloated. A helper function for handling keys and passing values in a dictionary for specific keys might have been better than using `elif` statements for different values.  
+- Implementing the ability to press `Esc` at any point to return to the main menu was left undone.  
+- I didn’t use custom classes or similar features, but I didn’t feel the need for them either.
+
+### Basic Idea
+A Python program to maintain my vinyl record collection.
 
 ### Functions
+At least the following:
 
-Search function: practically any record parameter must be able to be used as a parameter, based on condition or even publisher.
-
-Adding a new record: parameters include artist, record name, label, year, exact format, e.g., 2LP, 3LP, 180 grams, etc. Price? Which shelf or display case it is in.
-Stars /5 and additional information as well as the date added, so practically everything that is also on Discogs. Below are the Discogs parameters.
-Catalog#,Artist,Title,Label,Format,Rating,Released,release_id,CollectionFolder,Date Added,Collection Media Condition,Collection Sleeve Condition,Collection Notes
-
-Editing record information
-
-Deleting record information
+- **Search function for the collection**: Parameters can be almost any record attribute, such as condition or publisher.  
+- **Add a new record**: Parameters include artist, album name, label, year, specific format (e.g., 2LP, 3LP, 180g, etc.), price, storage location (shelf/display case), star rating out of 5, additional notes, and date added. Essentially everything available in Discogs. Below are Discogs parameters:  
+  `Catalog#, Artist, Title, Label, Format, Rating, Released, release_id, CollectionFolder, Date Added, Collection Media Condition, Collection Sleeve Condition, Collection Notes`.  
+- **Edit record details**  
+- **Delete a record**
 
 #### Lauri Turunen 23/09/2024
 
-
 ## 26/10/2024 
 
-Project brainstorming,
-Changes to functions.
-Menu: Shows stats about the collection at the moment, e.g., number of records
-1. Add a new record
-2. Search records
-    Subprograms for search function, Edit record information and delete record
-3. List all records, with the possibility to list only certain information about the records
-4. Load collection, possibility to create a new collection
-5. Wish list, a basic way to keep track of records I would like to have
+**Project brainstorming and changes to functions.**  
+Menu: Displays current collection statistics, e.g., the total number of records.  
+1. Add a new record  
+2. Search records  
+   - Submenus for search: Edit record details and delete record  
+3. List all records, with the option to list only specific details of the records  
+4. Load a collection, with the possibility to create a new collection  
+5. Wishlist: A basic way to keep track of records I’d like to have.  
 
-I decided to implement the project so that the program loads a .csv file at the beginning as a dictionary, making it easier to handle, and then always saves it back to .csv when closing. In Python, there is a DictReader method that can read the file as a list of dictionaries and it feeds those dictionaries with keys from the top row like catalog, name, etc.
+I decided to implement the project so that the program loads a `.csv` file at startup as a dictionary, making it easier to handle, and then saves it back to `.csv` upon closing. In Python, the `DictReader` method can read a file as a list of dictionaries, using the header row as keys (e.g., catalog, name, etc.).
 
 ## 28/11/2024
-Alright, now it's time to finish this up
-15:40 Locked in
-17:40 Looking good
-21:34 Done, still need to add some clarifying comments and formatting the outputs, and the average year in the stats section is still broken
+Time to finalize this project.  
+**15:40** Locked in.  
+**17:40** Progressing well.  
+**21:34** Done, with final comments, tweaks, and output formatting. The "average year" stat is still broken.
 
 ## 29/11/2024
-The average year works somewhat, if there aren't enough records it gives a zerodivision error, needs fixing
-Added stuff, for example in the add record section, the condition options now directly show the conditions to choose from, and then you can choose the condition of the sleeve, etc.
-The only problem is that now it freezes at that point :D, I tweaked it a bit and in the format section, I added the same prompt and it just asks what to put.
-The Discogs format list is just so long that probably at least in this text-based program, I'll end up letting the user input the extra information themselves.
+The average year function somewhat works, but if there aren’t enough records, it throws a `ZeroDivisionError`, which needs fixing.  
+Added features, for example:  
+- In the "add record" function, the condition section now directly prompts you to select from predefined conditions for the sleeve and media.  
+- The only issue is that it now freezes at that point :D. I tweaked it a bit, and in the format section, it now prompts you to input manually. Discogs’ format list is so long that I’ll likely stick with user input for now in this text-based program.  
 
-![Format list](/Dokumentaatio/image.png)
+![Format List](/Documentation/image.png)
 
 ## 04/12/2024
-Good progress today, I've been working on this for several hours instead of doing English assignments...
-Added more error handling, I could almost make my own error but haven't bothered...
-All sorts of things...
-Still a lot of bugs but got the project moving forward.
+Good progress today. Spent several hours on this instead of my English assignments...  
+- Added more error handling. I could almost create a custom error, but I didn’t feel like it.  
+- Various tweaks...  
+- Still lots of bugs, but the project is moving forward.
 
 ## 10/12/2024
 More bug fixes and error handling.  
-I thought maybe someday I could add a feature where there could be a settings file that saves, for example, the collection filename and it knows how to load it every time.  
-Maybe if I get really excited someday, I could use an API to fetch the collection average or something. This would just require a lot of error handling, etc., and since Discogs already has it directly on their site, I'm not sure.
-I'm starting to question the list collection feature a bit, it might not be used as much as the search function since the search function is quite good...
-TODO: case insensitive handling for everything  
-23:34, implementing a new function, confirmation. I use that yes or no thing so much that I'll just make it a separate function to make it easier.
-I also started using Wakatime
+I’m considering adding a feature where settings (like the collection’s filename) are saved to a configuration file, which the program would automatically load.  
+Maybe if I get really motivated, I could use an API to fetch collection averages, etc. This would require extensive error handling, though, and since Discogs already provides this directly, I’m not sure it’s worth it.  
+I’m questioning the usefulness of the "list collection" feature. It might not be used as much as the search function, which is quite powerful.  
+**TODO**: Add case-insensitive handling to everything.  
+**23:34** Implemented a new function: confirmation. I use yes/no prompts so often that I decided to simplify by creating a dedicated function for it.  
+Also started using WakaTime.
 
-![Flowchart](/Dokumentaatio/flowchart.png)
+![Flowchart](/Documentation/flowchart.png)
 
 ## 11/12/2024
-Case insensitive handling and confirmation function done.
+Case-insensitive handling and confirmation function completed.  
+Got an idea to implement a "handle folders" function as the last feature. It could allow moving all search results to a different folder, for instance. I might add this later but will leave it as-is for now.
