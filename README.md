@@ -1,5 +1,28 @@
 # LP kokoelma
-Tämä on projekti python kurssille.
+
+## Palautus
+Ohjelmoinnin perusteet: Harjoitustyön palautus  
+### Turunen Lauri \[AG3154\]  
+  
+Linkki harjoitustyön dokumentointiin:
+ [Linkki](https://gitlab.labranet.jamk.fi/AG3154/loppuprojektitest)
+
+4-5
+<br>
+ITSEARVIO
+
+Vahvuudet
+
++ Sovellus toimii halutusti
++ Käytin mielestäni aika hyvin opintojakson tekniikoita
++ csv filen handling toimii hyvin.
++ Syötteiden error handling on mielestäni aika hyvä, vaikka except errorit jäivät vähäiselle.
++ Flowchart on mielestäni hyvä lisä.
+
+Kehitettävää
+- Add_record funktiosta tuli jokseenkin turvonnut, siihen olisi voinut tehdä apufunktion keyn handlaamiseen ja syöttää vaikka dictionarylla tietyt arvot tietyn keyn ilmetessä sen sijaa että olisi tuolla lailla elif lausekkeet eri arvoille.
+- Missä vaan vaiheessa esc painaminen jotta pääsisi main menuun jäi toteuttamatta.
+
 
 ### Perusidea
 Python ohjelma joka ylläpitää vinyylikokoelmaani.
@@ -67,7 +90,7 @@ Otin kans wakatime käyttöön
 
 ## 11/12/2024
 Case insensitive handling ja confirmation funktio hoidettu.
-Sain idean että viimeinen funktio minkä toteutan on handle folders funktio et vois tos search funktiossa vaikka siirtää kaikki hakutulokset eri folderiin tms.
+Sain idean että viimeinen funktio minkä toteutan on handle folders funktio et vois tos search funktiossa vaikka siirtää kaikki hakutulokset eri folderiin tms. Tän teen ehkä joskus myöhemmin, jätän tän nyt tälläisekseen.
 
 
 

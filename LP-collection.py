@@ -4,7 +4,8 @@ import os.path
 
 def load_collection() -> tuple[list, str]:
     """Function to load the collection from a .csv file
-        Asks for the filename to load the collection from, if empty, creates a new collection.
+        Asks for the filename to load the collection from, if empty, creates a new collection with chosen name.
+        Handles the case where the filename is correct but doesnt have the .csv suffix.
     Returns:
         tuple[list, str]: tuple with the collection and filename
     """
@@ -14,16 +15,22 @@ def load_collection() -> tuple[list, str]:
         try:
             if filename == "":
                 while True:
-                    choice = str(input("Enter the name of the new collection without .csv, or leave empty for default: "))
+                    choice = str(input("Enter the name of the new collection, or leave empty for default: "))
                     if not choice:
                         choice = "collection"
-                    if os.path.isfile(choice + ".csv"):
+                    if os.path.isfile(choice + ".csv") or os.path.isfile(choice):
                         print("File already exists, please choose another name.")
                         continue
                     else:
-                        print(f"Creating a new collection with the filename {choice}.csv")
+                        if "." in choice and ".csv" not in choice:
+                            print("Invalid filename, please try again.")
+                            continue
+                        elif ".csv" in choice:
+                            filename = choice
+                        else:
+                            filename = choice + ".csv"
+                        print(f"Creating a new collection with the filename {filename}")   
                         collection = []
-                        filename = choice + ".csv"
                         return collection, filename
             elif filename.endswith(".csv"):
                 with open(f'{filename}', mode='r', newline='', encoding='utf-8') as file:
@@ -51,11 +58,7 @@ def add_record(collection) -> list:
     """Function to add a record to the collection
         Automatically inserts the current date and time for the Date Added field.
         Checks which input type is expected for the field and asks for it.
-        Asks for the condition of the record or sleeve by displaying the options for it.
-        Asks for the format of the record by displaying the options for it.
-        Asks for the rating of the record and makes sure it is 1-5
-        Asks for the year of release and makes sure it is a valid year
-        Asks for the folder of the record and displays the options for it and handles the addition of a new folder
+        Handles specific types of inputs.
     Args:
         collection (list): collection as a list of dictionaries
 
@@ -93,6 +96,7 @@ def add_record(collection) -> list:
                         if condition not in conditions:
                             print("Invalid choice, try again.")
                             continue
+                        print(f"Collection {key.split()[1]} chosen: {conditions[condition]}")
                         record[key] = conditions[condition]
                         break
                     except ValueError:
@@ -107,7 +111,7 @@ def add_record(collection) -> list:
                         if selected_format not in formats:
                             print("Invalid choice, please try again")
                             continue
-                        print(f"Format chosen:, {formats[selected_format]}")
+                        print(f"Format chosen: {formats[selected_format]}")
                         print("Is it a reissue, compilation or 180g etc?")
                         
                         while True:
@@ -188,10 +192,11 @@ def add_record(collection) -> list:
         print("Confirm the details of the record")
         for key, value in record.items():
             print(f"{key}: {value}")
+        print("Confirm?")
         confirm = confirmation()
         if confirm == True:
             collection.append(record)
-            print(f"Record {record['Title']} by {record['Artist']} added to the collection")
+            print(f"Record {record['Title']} by {record['Artist']} added to the collection!")
             print("1. Add another record, 2. Return to the main menu")
             conf_choice = input("Enter your choice: ")
             if conf_choice == "1":
@@ -221,7 +226,7 @@ def add_record(collection) -> list:
     
 def search_collection(collection) -> list:
     """Function to search the collection
-
+        Case insensitive search, cycles through the collection and appends results to a search result list.
     Args:
         collection (list): collection as list of dictionaries
 
@@ -287,8 +292,8 @@ def search_collection(collection) -> list:
                 except ValueError:
                     print("Invalid choice, please try again")
                     continue
-                
-                        
+            else:
+                break               
     return collection
 
 def modify_record(collection, record) -> list:
