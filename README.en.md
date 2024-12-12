@@ -62,7 +62,7 @@ Added features, for example:
 - In the "add record" function, the condition section now directly prompts you to select from predefined conditions for the sleeve and media.  
 - The only issue is that it now freezes at that point :D. I tweaked it a bit, and in the format section, it now prompts you to input manually. Discogs’ format list is so long that I’ll likely stick with user input for now in this text-based program.  
 
-![Format List](/Documentation/image.png)
+![Format List](/Dokumentaatio/image.png)
 
 ## 04/12/2024
 Good progress today. Spent several hours on this instead of my English assignments...  
@@ -79,7 +79,7 @@ I’m questioning the usefulness of the "list collection" feature. It might not 
 **23:34** Implemented a new function: confirmation. I use yes/no prompts so often that I decided to simplify by creating a dedicated function for it.  
 Also started using WakaTime.
 
-![Flowchart](/Documentation/flowchart.png)
+![Flowchart](/Dokumentaatio/flowchart.png)
 
 ## 11/12/2024
 Case-insensitive handling and confirmation function completed.  
