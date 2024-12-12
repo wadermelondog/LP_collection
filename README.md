@@ -22,6 +22,7 @@ Vahvuudet
 Kehitettävää
 - Add_record funktiosta tuli jokseenkin turvonnut, siihen olisi voinut tehdä apufunktion keyn handlaamiseen ja syöttää vaikka dictionarylla tietyt arvot tietyn keyn ilmetessä sen sijaa että olisi tuolla lailla elif lausekkeet eri arvoille.
 - Missä vaan vaiheessa esc painaminen jotta pääsisi main menuun jäi toteuttamatta.
+- Omia luokkia tms ei tullut käytettyä mutta en kyllä niitä tuntunut tarvitsevankaan.
 
 
 ### Perusidea
