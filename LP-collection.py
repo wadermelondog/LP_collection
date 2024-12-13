@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
-import os.path
+import os
+
 
 def load_collection() -> tuple[list, str]:
     """Function to load the collection from a .csv file
@@ -365,16 +366,14 @@ def list_collection(collection):
         keys = keys.replace(" ", "")
     if keys:
         keys = keys.split(',')
-        print(f"{keys}")
+        clear_console()
+        print(f"{keys}")       
         for record in collection:
-            if len(keys) == 1:
-                for key in keys:
-                    print(f"{record.get(key)}\n")
-            else:
-                for key in keys:
-                    print(f"{record.get(key, '')} ", end="")
+            for key in keys:
+                print(f"{record.get(key, '')} ", end="")
         print("---------------------------")              
     else:
+        clear_console()
         for record in collection:
             for key, value in record.items():
                 if value == "":
@@ -473,10 +472,20 @@ def confirmation() -> bool:
         else:
             print("Invalid choice, please try again")
             continue
+        
+def clear_console():
+    """
+    Clearing console
+    """
+    if os.name == "posix":
+        os.system('clear')
+    else:
+        os.system('cls')
 
 def main():
     collection, filename = load_collection()
     while True:
+        clear_console()
         print("---------------------------")
         print("Welcome to your record collection!")
         print_stats(collection)
@@ -492,10 +501,13 @@ def main():
             print("You have no records in your collection, please add some first.")
             continue
         elif choice == '1':
+            clear_console()
             collection = add_record(collection)
         elif choice == '2':
+            clear_console()
             collection = search_collection(collection)
         elif choice == '3':
+            clear_console()
             list_collection(collection)
         elif not choice:
             print("Exiting the program")
