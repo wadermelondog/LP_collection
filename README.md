@@ -95,5 +95,7 @@ Otin kans wakatime käyttöön
 Case insensitive handling ja confirmation funktio hoidettu.
 Sain idean että viimeinen funktio minkä toteutan on handle folders funktio et vois tos search funktiossa vaikka siirtää kaikki hakutulokset eri folderiin tms. Tän teen ehkä joskus myöhemmin, jätän tän nyt tälläisekseen.
 
+## 14/12/2024
+Clear console funktio lisätty, list collection ei toimi oikein jos hakee vaan yhdellä keyllä...
 
 
