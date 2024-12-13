@@ -367,9 +367,13 @@ def list_collection(collection):
         keys = keys.split(',')
         print(f"{keys}")
         for record in collection:
-            for key in keys:
-                print(f"{record.get(key, '')} ", end="")
-            print("---------------------------")              
+            if len(keys) == 1:
+                for key in keys:
+                    print(f"{record.get(key)}\n")
+            else:
+                for key in keys:
+                    print(f"{record.get(key, '')} ", end="")
+        print("---------------------------")              
     else:
         for record in collection:
             for key, value in record.items():
@@ -497,7 +501,10 @@ def main():
             print("Exiting the program")
             if confirmation():
                 save_collection(collection, filename)
-            break
+                break
+            else:
+                print("Not exiting program")
+                continue
         else:
             print("Invalid choice, please try again")
             continue
